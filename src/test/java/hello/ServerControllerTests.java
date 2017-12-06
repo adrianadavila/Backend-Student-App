@@ -50,6 +50,7 @@ public class ServerControllerTests {
 
     @Autowired
     WebApplicationContext context;
+
     @Autowired
     FilterChainProxy springSecurityFilterChain;
 

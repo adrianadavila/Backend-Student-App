@@ -4,6 +4,7 @@ hello/com/mvc/api/dao/IClassesDAO.class
 hello/com/mvc/api/dao/UserDAO.class
 hello/com/mvc/api/service/StudentService.class
 hello/com/mvc/api/config/SimpleCorsFilter.class
+hello/ServletInitializer.class
 hello/com/mvc/api/controllers/StudentController.class
 hello/com/mvc/api/service/UserService.class
 hello/com/mvc/api/entities/User.class
