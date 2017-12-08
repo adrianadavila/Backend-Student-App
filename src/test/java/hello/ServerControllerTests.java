@@ -1,4 +1,3 @@
-
 package hello;
 
 
@@ -9,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import hello.com.mvc.api.entities.Classes;
 import hello.com.mvc.api.entities.Student;
 import hello.com.mvc.api.service.IStudentService;
 
@@ -28,7 +26,6 @@ import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import hello.com.mvc.api.entities.Student;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.context.WebApplicationContext;
@@ -65,30 +62,39 @@ public class ServerControllerTests {
 
     }
 
-
+    //test to save data
     @Test
-    public void contextLoads() throws Exception {
+    public void saveStudent() throws Exception {
+        Student oneS = new Student();
+        oneS.setMajor("dance4");
+        oneS.setName("kate");
+
+        Mockito.when(studentService.addStudent(oneS)).thenReturn(true);
+
+        MvcResult mvcResult2 = this.mockMvc.perform(post("/user/student")
+                .header("Authorization", "Bearer"+ getAccessToken("adr", "password"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(oneS)))
+                .andReturn();
+
+        System.out.println(mvcResult2.getResponse());
+
+        ArgumentCaptor<Student> argument = ArgumentCaptor.forClass(Student.class);
+        Mockito.verify(studentService).addStudent(argument.capture());
+    }
+
+    //test to get data
+    @Test
+    public void getStudents() throws Exception {
 
         List<Student> list = new ArrayList<Student>();
         Student oneS = new Student();
-        Classes oneC = new Classes();
-        oneC.setClass_1("dance0");
-        oneC.setClass_2("dance1");
-        oneC.setClass_3("dance2");
-        oneC.setClass_4("dance3");
         oneS.setMajor("dance4");
         oneS.setName("kate");
-        oneS.setClasses(oneC);
 
         Student twoS = new Student();
-        Classes twoC = new Classes();
-        twoC.setClass_1("art0");
-        twoC.setClass_2("art1");
-        twoC.setClass_3("art2");
-        twoC.setClass_4("art3");
         twoS.setMajor("art");
         twoS.setName("john");
-        twoS.setClasses(twoC);
 
         list.add(oneS);
         list.add(twoS);
@@ -103,21 +109,6 @@ public class ServerControllerTests {
         System.out.println(mvcResult.getResponse());
 
         Mockito.verify(studentService).getAllStudents();
-
-
-        Mockito.when(studentService.addStudent(oneS)).thenReturn(true);
-
-        MvcResult mvcResult2 = this.mockMvc.perform(post("/user/student")
-                .header("Authorization", "Bearer"+ getAccessToken("adr", "password"))
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(oneS)))
-                .andReturn();
-
-        System.out.println(mvcResult2.getResponse());
-
-        ArgumentCaptor<Student> argument = ArgumentCaptor.forClass(Student.class);
-        Mockito.verify(studentService).addStudent(argument.capture());
-
 
 
     }

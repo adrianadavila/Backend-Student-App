@@ -14,32 +14,38 @@ import org.springframework.transaction.annotation.Transactional;
 public class StudentDAO implements IStudentDAO {
     @PersistenceContext
     private EntityManager entityManager;
+
     @Override
     public Student getStudent(int studentId) {
         return entityManager.find(Student.class, studentId);
     }
+
     @SuppressWarnings("unchecked")
+
     @Override
     public List<Student> getAllStudents() {
         String hql = "select s from Student s"; //Student b/c it is the 'entity'
         return (List<Student>) entityManager.createQuery(hql).getResultList();
     }
+
     @Override
     public void addStudent(Student student) {
         entityManager.persist(student);
     }
+
     @Override
     public void updateStudent(Student student) {
         Student stdnt = getStudent(student.getId());
         stdnt.setName(student.getName());
         stdnt.setMajor(student.getMajor());
-        //stdnt.setClasses(student.getClasses());
         entityManager.flush();
     }
+
     @Override
     public void deleteStudent(int studentId) {
         entityManager.remove(getStudent(studentId));
     }
+
     @Override
     public boolean studentExists(String name, String major) {
         String hql = "FROM Student S WHERE S.name = ? and S.major = ?";
